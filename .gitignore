@@ -2,3 +2,6 @@
 /.idea
 /commons/__pycache__
 /resources/__pycache__
+/configs/__pycache__
+/configs/db.py
+/__pycache__
