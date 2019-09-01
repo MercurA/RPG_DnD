@@ -9,17 +9,14 @@ def abort_if_todo_doesnt_exist(todo_id):
         abort(404, message="Todo {} doesn't exist".format(todo_id))
 
 
-def format_book_list(cur):
-    books = []
+def format_character_list(cur):
+    char = []
     for row in cur:
-        books.append({
-            'ISBN': row[0],
-            'Title': row[1],
-            'Author': row[2],
-            'Description': row[3],
-            'PublishDate': row[4],
-            'Publisher': row[5],
-            'NrOfCopies': row[6],
-            'NrOfCopiesAvailable': row[7]
+        char.append({
+            'charId': row[0],
+            'charName': row[1],
+            'charLife': row[2],
+            'charPower': row[3],
+            'charMoves': row[4],
         })
-    return jsonify(books)
+    return jsonify(char)
