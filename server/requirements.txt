@@ -1,3 +1,5 @@
-Flask_RESTful==0.3.7
-Flask==1.0.3
 PyMySQL==0.9.3
+Flask==1.0.3
+pytest==5.1.2
+Flask_RESTful==0.3.7
+connexion==2.3.0
