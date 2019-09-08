@@ -1,9 +1,12 @@
-const { app, BrowserWindow, Menu } = require('electron');
+const { app, BrowserWindow, Menu } = require("electron");
+const { createAccount } = require("./createAccount/createAccount");
+const check = require("./fetches/account/getAccount");
 
 isStartGameOpen = false;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
+if (require("electron-squirrel-startup")) {
+  // eslint-disable-line global-require
   app.quit();
 }
 
@@ -24,10 +27,10 @@ const createWindow = () => {
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
-  mainWindow.on('closed', () => {
+  mainWindow.on("closed", () => {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
@@ -38,7 +41,7 @@ const createWindow = () => {
   Menu.setApplicationMenu(mainMenu);
 };
 
-const createStartGame = (isStartGameOpen) => {
+const createStartGame = isStartGameOpen => {
   startGameWindow = new BrowserWindow({
     width: 1000,
     height: 800,
@@ -49,40 +52,31 @@ const createStartGame = (isStartGameOpen) => {
   const startMenu = Menu.buildFromTemplate(startGameMenuTemplate);
   Menu.setApplicationMenu(startMenu);
 
-  // const newChar = document.getElementById('newCharacter');
-
-    // newChar.addEventListener('click', () => {
-    //   console.log('123');
-    // })
-
-
-
-  startGameWindow.on('close', () => {
+  startGameWindow.on("close", () => {
     startGameWindow = null;
   });
 
-  if(isStartGameOpen) {
+  if (isStartGameOpen) {
     isStartGameOpen = false;
     mainWindow.close();
   }
-
-}
+};
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on("ready", createWindow);
 
 // Quit when all windows are closed.
-app.on('window-all-closed', () => {
+app.on("window-all-closed", () => {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
+  if (process.platform !== "darwin") {
     app.quit();
   }
 });
 
-app.on('activate', () => {
+app.on("activate", () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
@@ -90,28 +84,39 @@ app.on('activate', () => {
   }
 });
 
-
 const startGameMenuTemplate = [
   {
-    label: ''
+    label: ""
   }
 ];
 
 const mainMenuTemplate = [
   {
-    label: 'File',
+    label: "File",
     submenu: [
       {
-        label: 'Start New Game',
-        click() {
+        label: "Start New Game",
+        click(menuItem, browserWindow, event) {
           isStartGameOpen = true;
-          createStartGame(isStartGameOpen);
+          if (event.triggeredByAccelerator) {
+            if (check.account()) {
+              createStartGame(isStartGameOpen);
+            } else {
+              createAccount(mainWindow);
+            }
+          }
         }
       },
       {
-        label: 'Quit',
-        accelerator: process.platform == 'darwin' ? 'Command+Q' : 'Ctrl+Q',
-        click(){
+        label: "New Account",
+        click() {
+          createAccount();
+        }
+      },
+      {
+        label: "Quit",
+        accelerator: process.platform == "darwin" ? "Command+Q" : "Ctrl+Q",
+        click() {
           app.quit();
         }
       }
@@ -119,37 +124,37 @@ const mainMenuTemplate = [
   }
 ];
 
-if(process.env.NODE_ENV !== 'production') {
-
+if (process.env.NODE_ENV !== "production") {
   startGameMenuTemplate.push({
-    label: 'Developer Tools',
+    label: "Developer Tools",
     submenu: [
       {
-        label: 'Toggle dev tools',
-        accelerator: process.platform == 'darwin' ? 'Command+I' : 'Ctrl+I',
-        click(item, focusedWindow){
+        label: "Toggle dev tools",
+        accelerator: process.platform == "darwin" ? "Command+I" : "Ctrl+I",
+        click(item, focusedWindow) {
           focusedWindow.toggleDevTools();
-        },
+        }
       },
       {
-        role: 'reload'
+        role: "reload"
       }
     ]
   });
 
   mainMenuTemplate.push({
-    label: 'Developer Tools',
+    label: "Developer Tools",
     submenu: [
       {
-        label: 'Toggle dev tools',
-        accelerator: process.platform == 'darwin' ? 'Command+I' : 'Ctrl+I',
-        click(item, focusedWindow){
+        label: "Toggle dev tools",
+        accelerator: process.platform == "darwin" ? "Command+I" : "Ctrl+I",
+        click(item, focusedWindow) {
           focusedWindow.toggleDevTools();
-        },
+        }
       },
       {
-        role: 'reload'
+        role: "reload"
       }
     ]
   });
 }
+
