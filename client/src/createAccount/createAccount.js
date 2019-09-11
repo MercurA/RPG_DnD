@@ -8,8 +8,8 @@ exports.createAccount = (mainWindow) => {
     width: 1000,
     resizable: false,
 });
-newAccount.loadURL(`file://${__dirname}/newAccount.html`);
-
+newAccount.loadURL(`file://${__dirname}/createAccount.html`);
+newAccount.webContents.openDevTools();
 newAccount.once('close', () => {
     createAccount = null;
 });
