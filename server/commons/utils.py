@@ -23,7 +23,6 @@ def format_character_list(cur):
 
 
 def response_wrapper(data):
-    print(data)
     if type(data) is list or type(data) is dict:
         if len(data) <= 0:
             return {
